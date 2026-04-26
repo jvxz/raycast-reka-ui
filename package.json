@@ -32,9 +32,9 @@
   "icon": "extension-icon.svg",
   "commands": [
     {
-      "name": "browse-components",
-      "title": "Browse Components",
-      "description": "Browse components provided by Reka UI",
+      "name": "search-components",
+      "title": "Search Components",
+      "description": "Search components provided by Reka UI",
       "mode": "view"
     }
   ],
