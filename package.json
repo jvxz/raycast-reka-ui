@@ -28,7 +28,7 @@
     "oxfmt": "^0.46.0",
     "oxlint": "^1.61.0"
   },
-  "icon": "extension-icon.png",
+  "icon": "extension-icon.svg",
   "commands": [
     {
       "name": "browse-components",
