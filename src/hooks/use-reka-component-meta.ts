@@ -1,3 +1,4 @@
+import { getPreferenceValues } from '@raycast/api'
 import { showFailureToast, useLocalStorage, usePromise } from '@raycast/utils'
 import { useEffect, useMemo } from 'react'
 
@@ -17,6 +18,7 @@ export function useRekaComponentMeta(component: Component) {
     value: cachedComponentMeta,
     isLoading: isLocalStorageLoading,
   } = useLocalStorage<ComponentMeta>(`reka-ui-component-meta:${component.slug}`)
+  const prefs = getPreferenceValues<Preferences>()
 
   const { isLoading: isPromiseLoading, revalidate } = usePromise(async () => {
     if (isLocalStorageLoading) return
@@ -24,7 +26,10 @@ export function useRekaComponentMeta(component: Component) {
     if (cachedComponentMeta) return cachedComponentMeta
 
     const res = await fetch(`${REKA_COMPONENTS_GITHUB_URL}/${component.slug}`, {
-      headers: { 'X-GitHub-Api-Version': '2026-03-10' },
+      headers: {
+        ...(prefs.ghPat ? { Authorization: `Bearer ${prefs.ghPat}` } : {}),
+        'X-GitHub-Api-Version': '2026-03-10',
+      },
       cache: 'force-cache',
     })
     if (!res.ok) {
