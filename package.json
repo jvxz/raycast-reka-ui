@@ -21,6 +21,39 @@
     "@raycast/utils": "^1.17.0",
     "ultramatter": "^0.0.4"
   },
+  "preferences": [
+    {
+      "name": "description",
+      "label": "Show description",
+      "type": "checkbox",
+      "required": false,
+      "default": true,
+      "description": "Show the description section in component metadata panel"
+    },
+    {
+      "name": "features",
+      "label": "Show features",
+      "type": "checkbox",
+      "required": false,
+      "default": true,
+      "description": "Show the features section in component metadata panel"
+    },
+    {
+      "name": "anatomy",
+      "label": "Show anatomy",
+      "type": "checkbox",
+      "required": false,
+      "default": true,
+      "description": "Show the anatomy section in component metadata panel"
+    },
+    {
+      "name": "ghPat",
+      "title": "GitHub PAT",
+      "type": "password",
+      "required": false,
+      "description": "GitHub personal access token (PAT) to prevent rate-limiting"
+    }
+  ],
   "devDependencies": {
     "@types/node": "22.19.17",
     "@types/react": "19.0.10",
