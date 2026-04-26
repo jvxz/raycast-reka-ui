@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [],
+  "singleQuote": true,
+  "arrowParens": "avoid",
+  "semi": false,
+  "sortPackageJson": true,
+  "sortImports": true,
+  "useTabs": false
+}
