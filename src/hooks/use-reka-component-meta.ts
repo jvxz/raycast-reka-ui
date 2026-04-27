@@ -1,5 +1,5 @@
 import { getPreferenceValues } from '@raycast/api'
-import { showFailureToast, useLocalStorage, usePromise } from '@raycast/utils'
+import { showFailureToast, useCachedPromise, useLocalStorage } from '@raycast/utils'
 import { useEffect, useMemo } from 'react'
 
 import { REKA_COMPONENTS_GITHUB_URL } from '../constants'
@@ -19,36 +19,41 @@ export function useRekaComponentMeta(component: Component) {
     isLoading: isLocalStorageLoading,
   } = useLocalStorage<ComponentMeta>(`reka-ui-component-meta:${component.slug}`)
   const prefs = getPreferenceValues<Preferences>()
+  const ghPat = prefs.ghPat ?? ''
 
-  const { isLoading: isPromiseLoading, revalidate } = usePromise(async () => {
-    if (isLocalStorageLoading) return
+  const { isLoading: isPromiseLoading, revalidate } = useCachedPromise(
+    async (slug: string, pat: string) => {
+      if (cachedComponentMeta) return cachedComponentMeta
 
-    if (cachedComponentMeta) return cachedComponentMeta
-
-    const res = await fetch(`${REKA_COMPONENTS_GITHUB_URL}/${component.slug}`, {
-      headers: {
-        ...(prefs.ghPat ? { Authorization: `Bearer ${prefs.ghPat}` } : {}),
-        'X-GitHub-Api-Version': '2026-03-10',
-      },
-      cache: 'force-cache',
-    })
-    if (!res.ok) {
-      await showFailureToast(res.statusText, {
-        message: res.statusText,
-        title: 'Failed to fetch component metadata',
+      const res = await fetch(`${REKA_COMPONENTS_GITHUB_URL}/${slug}`, {
+        headers: {
+          ...(pat ? { Authorization: `Bearer ${pat}` } : {}),
+          'X-GitHub-Api-Version': '2026-03-10',
+        },
+        cache: 'force-cache',
       })
-      return
-    }
+      if (!res.ok) {
+        await showFailureToast(res.statusText, {
+          message: res.statusText,
+          title: 'Failed to fetch component metadata',
+        })
+        return
+      }
 
-    const json = await res.json()
+      const json = await res.json()
 
-    const meta = parseComponentMetaFromGhJson(json)
+      const meta = parseComponentMetaFromGhJson(json)
 
-    await setCachedComponentMeta({
-      ...component,
-      ...meta,
-    })
-  })
+      await setCachedComponentMeta({
+        ...component,
+        ...meta,
+      })
+    },
+    [component.slug, ghPat],
+    {
+      execute: false,
+    },
+  )
 
   useEffect(() => {
     if (!isLocalStorageLoading) revalidate()
