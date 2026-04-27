@@ -18,8 +18,7 @@
   },
   "dependencies": {
     "@raycast/api": "^1.104.13",
-    "@raycast/utils": "^1.17.0",
-    "ultramatter": "^0.0.4"
+    "@raycast/utils": "^1.17.0"
   },
   "preferences": [
     {
