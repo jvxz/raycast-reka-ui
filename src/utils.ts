@@ -1,5 +1,3 @@
-import { parse } from 'ultramatter'
-
 import { REKA_COMPONENTS_DOCS_BASE_URL } from './constants'
 
 export const parseComponentNameFromFilename = (filename: string) =>
@@ -19,11 +17,11 @@ export const parseComponentMetaFromGhJson = (json: object) => {
   const base64 = (json as Record<string, any>).content
   const base64WithoutNewLines = base64.replaceAll('\\n', '')
   const markdown = Buffer.from(base64WithoutNewLines, 'base64').toString()
-  const { frontmatter } = parse(markdown)
+  const markdownLines = markdown.split(/\r?\n/)
 
-  const anatomy = parseAnatomyBlock(markdown)
-  const features = parseFeatures(markdown)
-  const description = frontmatter?.description ?? 'No description'
+  const description = parseDescription(markdownLines)
+  const anatomy = parseAnatomyBlock(markdownLines)
+  const features = parseFeatures(markdownLines)
   return {
     description,
     anatomy,
@@ -31,13 +29,12 @@ export const parseComponentMetaFromGhJson = (json: object) => {
   }
 }
 
-export function parseAnatomyBlock(markdown: string) {
-  const markdownNewLines = markdown.split(/\r?\n/)
+export function parseAnatomyBlock(markdownLines: string[]) {
   let inside = false
   let startingAnatomy = false
   const contents: string[] = []
-  for (let i = 0; i < markdownNewLines.length; i++) {
-    const chunk = markdownNewLines[i]
+  for (let i = 0; i < markdownLines.length; i++) {
+    const chunk = markdownLines[i]
     if (!chunk) continue
 
     if (chunk.includes('# Anatomy')) {
@@ -65,13 +62,26 @@ export function parseAnatomyBlock(markdown: string) {
   return contents.join('\n')
 }
 
-export function parseFeatures(markdown: string) {
-  const markdownNewLines = markdown.split(/\r?\n/)
+export function parseDescription(markdownLines: string[]) {
+  for (let i = 0; i < markdownLines.length; i++) {
+    const line = markdownLines[i]
+    if (!line) continue
 
+    if (line.includes('description: ')) {
+      const split = line.split(' ')
+      split.shift()
+      return split.join(' ')
+    }
+  }
+
+  return 'No description found'
+}
+
+export function parseFeatures(markdownLines: string[]) {
   let inside = false
   let contents: string[] = []
-  for (let i = 0; i < markdownNewLines.length; i++) {
-    const chunk = markdownNewLines[i]
+  for (let i = 0; i < markdownLines.length; i++) {
+    const chunk = markdownLines[i]
     if (!chunk) continue
 
     if (chunk.includes(':features="[')) {
