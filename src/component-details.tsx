@@ -16,7 +16,7 @@ export function ComponentDetails({ component }: { component: Component }) {
 
   return (
     <List.Item.Detail
-      isLoading={isLoading || !componentMeta}
+      isLoading={isLoading}
       markdown={`
 ${
   prefs.description
