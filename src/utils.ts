@@ -4,7 +4,7 @@ export const parseComponentNameFromFilename = (filename: string) =>
   filename
     .replace('.md', '')
     .split('-')
-    .map(w => w.charAt(0).toLocaleUpperCase() + w.slice(1))
+    .map((w) => w.charAt(0).toLocaleUpperCase() + w.slice(1))
     .join(' ')
 
 export const getComponentUrlFromFilename = (filename: string) => {
@@ -14,7 +14,7 @@ export const getComponentUrlFromFilename = (filename: string) => {
 }
 
 export const parseComponentMetaFromGhJson = (json: object) => {
-  const base64 = (json as Record<string, any>).content
+  const base64 = (json as Record<string, unknown>).content
   const base64WithoutNewLines = base64.replaceAll('\\n', '')
   const markdown = Buffer.from(base64WithoutNewLines, 'base64').toString()
   const markdownLines = markdown.split(/\r?\n/)

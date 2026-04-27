@@ -8,14 +8,11 @@ export default function Command() {
   const { components } = useRekaComponents()
   const prefs = getPreferenceValues<Preferences>()
 
-  const shouldShowMetaPanel = useMemo(
-    () => prefs.anatomy || prefs.description || prefs.features,
-    [prefs],
-  )
+  const shouldShowMetaPanel = useMemo(() => prefs.anatomy || prefs.description || prefs.features, [prefs])
 
   return (
     <List searchBarPlaceholder="Search components..." isShowingDetail={shouldShowMetaPanel}>
-      {components?.map(component => (
+      {components?.map((component) => (
         <List.Item
           key={component.name}
           title={component.name}

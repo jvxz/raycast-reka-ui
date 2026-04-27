@@ -11,7 +11,7 @@ export function ComponentDetails({ component }: { component: Component }) {
   const featuresMd = useMemo(() => {
     if (!componentMeta?.features) return '...'
 
-    return componentMeta.features.map(f => `- ${f}`).join('\n')
+    return componentMeta.features.map((f) => `- ${f}`).join('\n')
   }, [componentMeta])
 
   return (

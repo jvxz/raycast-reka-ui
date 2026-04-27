@@ -59,10 +59,7 @@ export function useRekaComponentMeta(component: Component) {
     if (!isLocalStorageLoading) revalidate()
   }, [isLocalStorageLoading, revalidate])
 
-  const isLoading = useMemo(
-    () => isPromiseLoading || isLocalStorageLoading,
-    [isPromiseLoading, isLocalStorageLoading],
-  )
+  const isLoading = useMemo(() => isPromiseLoading || isLocalStorageLoading, [isPromiseLoading, isLocalStorageLoading])
 
   return {
     componentMeta: cachedComponentMeta,

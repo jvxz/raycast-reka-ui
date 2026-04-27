@@ -15,7 +15,7 @@ export function useRekaComponents() {
 
   const components = useMemo<Component[] | undefined>(() => {
     if (data)
-      return data.map(c => ({
+      return data.map((c) => ({
         docsUrl: getComponentUrlFromFilename(c.name),
         name: parseComponentNameFromFilename(c.name),
         slug: c.name,
